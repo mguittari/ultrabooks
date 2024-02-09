@@ -6,7 +6,17 @@ const bookController = {
       const books = await BookModel.getBooks();
       res.json(books);
     } catch (error) {
-      res.status(500).json({ error: 'Internal Server Error' });
+      res.status(422).json({ error: "Unprocessable Entity" });
+    }
+  },
+  getBookById: async (req, res) => {
+    const { id } = req.params;
+    try {
+      const book = await BookModel.getBookById(id);
+      res.json(book);
+      console.log(book);
+    } catch (error) {
+      res.status(404).json({ error: "Book not found" });
     }
   },
 }

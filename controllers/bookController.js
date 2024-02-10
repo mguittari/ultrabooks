@@ -19,6 +19,24 @@ const bookController = {
       res.status(404).json({ error: "Book not found" });
     }
   },
-}
+  addNewBook: async (req, res) => {
+    const { title, year, author_id } = req.body;
+
+    try {
+      const newBook = await BookModel.addNewBook({ title, year, author_id });
+
+      if (!newBook) {
+        res.send("Error, impossible to add new book");
+      } else {
+        res.send(`Created with id : ${newBook.id}`);
+      }
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  },
+ 
+};
+    
+  
 
 module.exports = bookController;

@@ -28,6 +28,29 @@ class BookModel {
       throw new Error("Book not found");
   }
 };
+
+static async addNewBook({ title, year, author_id }) {
+    const connection = await database.getConnection();
+    try {
+      const [result] = await connection.execute(
+        "INSERT INTO book (title, year, author_id) VALUES (?, ?, ?)",
+        [title, year, author_id]
+      );
+      connection.release();
+      if (result.affectedRows !== 1) {
+        throw new Error("Error, impossible to add new book");
+      }
+      const newBookId = result.insertId;
+      console.log(newBookId);
+      
+
+      // Récupérez les données du livre nouvellement créé en utilisant getBookById
+      return await BookModel.getBookById(newBookId);
+    } catch (error) {
+      connection.release();
+      throw error;
+    }
+  }
 };
 
 module.exports = BookModel;

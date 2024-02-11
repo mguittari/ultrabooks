@@ -41,16 +41,34 @@ static async addNewBook({ title, year, author_id }) {
         throw new Error("Error, impossible to add new book");
       }
       const newBookId = result.insertId;
-      console.log(newBookId);
-      
-
       // Récupérez les données du livre nouvellement créé en utilisant getBookById
       return await BookModel.getBookById(newBookId);
     } catch (error) {
       connection.release();
       throw error;
     }
+  };
+
+  static async updateBook(id, { title, year, author_id }) {
+    const connection = await database.getConnection();
+    try {
+      const [result] = await connection.execute(
+        "UPDATE book SET title = ?, year = ?, author_id = ? WHERE id = ?",
+        [title, year, author_id, id]
+      );
+      connection.release();
+      if (result.affectedRows !== 1) {
+        throw new Error(`Error updating book`);
+      }
+      return true; // Indiquer que la mise à jour a été effectuée avec succès
+    } catch (error) {
+      connection.release();
+      throw error;
+    }
   }
+
 };
+  
+
 
 module.exports = BookModel;

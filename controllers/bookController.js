@@ -34,8 +34,30 @@ const bookController = {
       res.status(500).json({ error: error.message });
     }
   },
- 
+  updateBook: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { title, year, author_id } = req.body;
+      const result = await BookModel.updateBook(
+        id,
+        {title,
+        year,
+        author_id}
+      );
+
+      if (result) {
+        res.send(`Book with id ${id} updated successfully !`);
+      } else {
+        res.status(401).send("Oups, little problem...");
+      }
+    } catch (error) {
+      res.status(500).send(error);
+    }
+  },
 };
+  
+ 
+
     
   
 
